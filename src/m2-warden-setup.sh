@@ -3,6 +3,7 @@ set -euo pipefail
 
 if [[ ! -f "./.m2-warden-setup.conf" ]]; then
     echo "Config file does not exist: ./.m2-warden-setup.conf"
+    echo "Download it from: https://raw.githubusercontent.com/MagePsycho/magento2-warden-setup/master/.m2-warden-setup.conf.dist"
     exit 1
 fi
 
@@ -113,7 +114,9 @@ warden shell -c "bin/magento config:set admin/security/session_lifetime 31536000
 warden shell -c "bin/magento config:set admin/security/password_lifetime ''"
 warden shell -c "bin/magento config:set admin/security/password_is_forced 0"
 
-# @todo add m2 alias for bin/magento ...
+echo 'Adding m2 <command> alias...'
+warden shell -c 'echo "alias m2=./bin/magento" >> /home/www-data/.bashrc'
+warden shell -c 'source /home/www-data/.bashrc'
 
 echo "Creating /etc/hosts entry..."
 if grep -Eq "127.0.0.1[[:space:]]+${APP_DOMAIN}" /etc/hosts; then
